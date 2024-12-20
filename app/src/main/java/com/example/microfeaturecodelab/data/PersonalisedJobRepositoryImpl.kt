@@ -3,7 +3,6 @@ package com.example.microfeaturecodelab.data
 import com.example.microfeaturecodelab.data.model.toDomain
 import com.example.microfeaturecodelab.data.network.NetworkDataSource
 import com.example.microfeaturecodelab.domain.PersonalisedJobRepository
-import com.example.microfeaturecodelab.domain.model.JobRecommendations
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
