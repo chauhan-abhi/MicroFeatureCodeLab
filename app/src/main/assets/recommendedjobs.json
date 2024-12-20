@@ -1,0 +1,23 @@
+[
+  {
+    "title": "Software Development Engineer I",
+    "company": "Facebook",
+    "location": "Menlo Park, CA",
+    "description": "Build and optimize features for billions of users.",
+    "imageUrl": "https://example.com/facebook-logo.png"
+  },
+  {
+    "title": "Software Development Engineer II",
+    "company": "Amazon",
+    "location": "Seattle, WA",
+    "description": "Design scalable systems for e-commerce platforms.",
+    "imageUrl": "https://example.com/amazon-logo.png"
+  },
+  {
+    "title": "Senior Software Development Engineer",
+    "company": "Google",
+    "location": "Mountain View, CA",
+    "description": "Develop innovative solutions for search and AI products.",
+    "imageUrl": "https://example.com/google-logo.png"
+  }
+]
