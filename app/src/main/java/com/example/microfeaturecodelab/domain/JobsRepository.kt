@@ -3,8 +3,8 @@ package com.example.microfeaturecodelab.domain
 import com.example.microfeaturecodelab.domain.model.JobRecommendations
 import kotlinx.coroutines.flow.Flow
 
-interface PersonalisedJobRepository {
+interface JobsRepository {
 
-    fun fetchPersonalisedJobs(): Flow<JobRecommendations>
+    fun fetchJobs(input: JobQueryParameter): Flow<JobRecommendations>
 }
 

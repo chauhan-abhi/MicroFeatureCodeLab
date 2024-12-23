@@ -5,9 +5,9 @@ import com.example.microfeaturecodelab.domain.model.JobRecommendations
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class PersonalisedJobNetworkResponse(
+data class JobNetworkResponse(
     val header: String,
-    val personalisedJobList: List<JobItemResponse>
+    val jobList: List<JobItemResponse>
 )
 
 @Serializable
@@ -20,10 +20,10 @@ data class JobItemResponse(
     val imageUrl: String
 )
 
-fun PersonalisedJobNetworkResponse.toDomain(): JobRecommendations {
+fun JobNetworkResponse.toDomain(): JobRecommendations {
     return JobRecommendations(
         sectionTitle = header,
-        jobRecommendations = personalisedJobList.map { it.toDomain() }
+        jobRecommendations = jobList.map { it.toDomain() }
     )
 }
 
