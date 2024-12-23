@@ -7,7 +7,9 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Card
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -49,7 +51,7 @@ fun JobScreen(
     Column(modifier.fillMaxSize()) {
         Text("Job Screen 1", Modifier.align(Alignment.CenterHorizontally))
         Text("Job Widget 2", Modifier.align(Alignment.CenterHorizontally))
-        JobRecommendation(viewModel.feature)
+        JobRecommendation(viewModel.feature, Modifier.align(Alignment.CenterHorizontally))
         // Filter
         // Job picks for you
         // Enable Job updates
@@ -77,7 +79,10 @@ fun JobRecommendation(
         }
 
         is PersonalisedJobViewModel.UiState.Success -> {
-            JobRecommendationSection((personalisedJob as PersonalisedJobViewModel.UiState.Success).jobSection) // No cast required
+            JobRecommendationSection(
+                (personalisedJob as PersonalisedJobViewModel.UiState.Success).jobSection,
+                modifier = modifier
+            ) // No cast required
         }
     }
 }
@@ -88,7 +93,13 @@ fun JobRecommendationSection(
     modifier: Modifier = Modifier
 ) {
     Log.d("JobRecommendationSection", "JobRecommendationSection: ${state.items.size}")
-
+    Card(
+        modifier = modifier.fillMaxWidth(),
+    ) {
+        state.items.map {
+            Text(it.jobTitle)
+        }
+    }
 
 }
 

@@ -1,5 +1,6 @@
 package com.example.microfeaturecodelab.data
 
+import android.util.Log
 import com.example.microfeaturecodelab.data.model.toDomain
 import com.example.microfeaturecodelab.data.network.DataSource
 import com.example.microfeaturecodelab.domain.JobQueryParameter
@@ -22,6 +23,7 @@ class JobsRepositoryImpl @Inject constructor(
             ).toDomain()
         )
     }.catch { e ->
+        Log.d("JobsRepositoryImpl", "Error fetching jobs: $e")
         // Handle exceptions here
     }
 }
