@@ -1,5 +1,7 @@
 package com.example.microfeaturecodelab.presentation.uimodel
 
+import com.example.microfeaturecodelab.base.MicroFeatureFactory
+import com.example.microfeaturecodelab.base.MicroFeatureViewModel
 import com.example.microfeaturecodelab.domain.JobQueryParameter
 import com.example.microfeaturecodelab.domain.GetJobsUseCase
 import com.example.microfeaturecodelab.presentation.model.RecommendedJobSection
@@ -23,7 +25,7 @@ import kotlinx.coroutines.launch
 class PersonalisedJobViewModel @AssistedInject constructor(
     private val useCase: GetJobsUseCase,
     @Assisted val coroutineScope: CoroutineScope
-) {
+): MicroFeatureViewModel {
     private val inputFlow = MutableStateFlow(JobQueryParameter.DEFAULT)
 
     val uiState: StateFlow<UiState> = inputFlow.flatMapLatest { input ->
@@ -76,8 +78,6 @@ class PersonalisedJobViewModel @AssistedInject constructor(
     }
 
     @AssistedFactory
-    interface Factory {
-        fun create(coroutineScope: CoroutineScope): PersonalisedJobViewModel
-    }
+    interface Factory: MicroFeatureFactory<PersonalisedJobViewModel>
 
 }
