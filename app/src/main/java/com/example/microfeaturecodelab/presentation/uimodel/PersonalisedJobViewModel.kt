@@ -1,5 +1,6 @@
 package com.example.microfeaturecodelab.presentation.uimodel
 
+import android.util.Log
 import com.example.microfeaturecodelab.base.MicroFeatureFactory
 import com.example.microfeaturecodelab.base.MicroFeatureViewModel
 import com.example.microfeaturecodelab.domain.JobQueryParameter
@@ -29,6 +30,7 @@ class PersonalisedJobViewModel @AssistedInject constructor(
     private val inputFlow = MutableStateFlow(JobQueryParameter.DEFAULT)
 
     val uiState: StateFlow<UiState> = inputFlow.flatMapLatest { input ->
+        Log.d("PersonalisedJobViewModel", "Fetching jobs with input: ${this.hashCode()}")
         useCase.fetch(input).map {
             UiState.Success(it.toUiModel())
         }.catch {

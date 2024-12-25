@@ -5,10 +5,16 @@ import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyItemScope
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -18,14 +24,23 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.microfeaturecodelab.base.MicroFeatureViewModel
+import com.example.microfeaturecodelab.presentation.featureconfig.ComponentConfig
+import com.example.microfeaturecodelab.presentation.model.JobItem
 import com.example.microfeaturecodelab.presentation.model.RecommendedJobSection
+import com.example.microfeaturecodelab.presentation.model.fakeJob
 import com.example.microfeaturecodelab.presentation.uimodel.PersonalisedJobViewModel
 import com.example.microfeaturecodelab.ui.theme.MicroFeatureCodelabTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -41,10 +56,30 @@ class MainActivity : ComponentActivity() {
                     JobScreen(
                         modifier = Modifier.padding(innerPadding)
                     )
+                    //TestLazy(modifier = Modifier.padding(innerPadding))
                 }
             }
         }
     }
+}
+
+@Composable
+fun TestLazy(modifier: Modifier = Modifier) {
+    val model = remember { fakeJob() }
+    LazyColumn(modifier) {
+        items(20) {
+            JobRecommendationSection(model)
+        }
+    }
+}
+
+@Composable
+fun LazyItem(text: Int, modifier: Modifier = Modifier) {
+    LaunchedEffect(text) {
+        Log.d("MicroFeature", "LazyItem: LaunchedEffect $text")
+    }
+    Log.d("MicroFeature", "LazyItem: $text")
+    Text("Item $text", modifier = modifier.padding(16.dp))
 }
 
 @Composable
@@ -52,46 +87,64 @@ fun JobScreen(
     modifier: Modifier = Modifier,
     viewModel: JobsViewModel = hiltViewModel()
 ) {
-    viewModel.hashCode()
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .verticalScroll(rememberScrollState(0)),
-    ) {
-        Text("Job Screen 1", Modifier.align(Alignment.CenterHorizontally))
-        Text("Job Widget 2", Modifier.align(Alignment.CenterHorizontally))
-        viewModel.getComponents().map { component ->
-            val componentViewModel = viewModel.componentViewModels[component.id]
-            Log.d("MicroFeature", "JobScreen: ${componentViewModel.hashCode()}")
+    val components by remember { mutableStateOf(viewModel.getComponents()) }
+    StableWidget(components, viewModel.componentViewModels, modifier = modifier)
+}
 
-            when (component.type) {
-                "personalisedJob" -> {
-                    JobRecommendation(
-                        componentViewModel as PersonalisedJobViewModel,
-                        Modifier.align(Alignment.CenterHorizontally)
-                    )
+
+@Composable
+fun StableWidget(
+    items: List<ComponentConfig>,
+    map: Map<String, MicroFeatureViewModel>,
+    modifier: Modifier = Modifier
+) {
+    LazyColumn(
+        modifier = modifier,
+        contentPadding = PaddingValues(16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        // Dynamically generate items for components
+        items(
+            items = items,
+            key = { it.id },
+            itemContent = {
+                val componentViewModel = remember(items) {
+                    map[it.id]
                 }
+                Log.d("MicroFeature", "JobScreen:index ${it.id}")
+                ComponentItem(it, componentViewModel)
             }
-            Spacer(Modifier.padding(16.dp))
+        )
+    }
+
+}
+@Composable
+fun ComponentItem(
+    component: ComponentConfig,
+    componentViewModel: MicroFeatureViewModel?
+) {
+    when (component.type) {
+        "personalisedJob" -> {
+            JobRecommendation(
+                componentViewModel as PersonalisedJobViewModel,
+                component.id,
+                Modifier.fillMaxWidth()
+            )
         }
-        // Filter
-        // Job picks for you
-        // Enable Job updates
-        // Recent Searches
-        // Explore company carousel
-        // Job list type1
-        // Discover linkedin
-        // More job paginated list
     }
 }
 
 @Composable
 fun JobRecommendation(
     viewmodel: PersonalisedJobViewModel,
+    id: String,
     modifier: Modifier = Modifier
 ) {
+    Log.d("MicroFeature", "JobRecommendation: Before collect item Id: $id")
+    // This collect triggers the flow in the viewmodel to fetch data from use case
+    // @TODO Currently its being called for all 20 items in lazy column which is inefficient
     val personalisedJob by viewmodel.uiState.collectAsStateWithLifecycle()
-    Log.d("MicroFeature", "JobScreen: $personalisedJob")
+    Log.d("MicroFeature", "JobScreen: id: $id item : $personalisedJob")
 
     when (personalisedJob) {
         is PersonalisedJobViewModel.UiState.Loading -> {
@@ -117,6 +170,9 @@ fun JobRecommendationSection(
     modifier: Modifier = Modifier
 ) {
     Log.d("JobRecommendationSection", "JobRecommendationSection: ${state.items.size}")
+    LaunchedEffect(state) {
+        Log.d("JobRecommendationSection", "Launched Effect")
+    }
     Card(
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
