@@ -68,13 +68,14 @@ fun TestLazy(modifier: Modifier = Modifier) {
     val model = remember { fakeJob() }
     LazyColumn(modifier) {
         items(20) {
+            Log.d("MicroFeature", "TextLazy: $it")
             JobRecommendationSection(model)
         }
     }
 }
 
 @Composable
-fun LazyItem(text: Int, modifier: Modifier = Modifier) {
+fun LazyItem(text: String, modifier: Modifier = Modifier) {
     LaunchedEffect(text) {
         Log.d("MicroFeature", "LazyItem: LaunchedEffect $text")
     }
@@ -94,7 +95,7 @@ fun JobScreen(
 
 @Composable
 fun StableWidget(
-    items: List<ComponentConfig>,
+    items: Widgets,
     map: Map<String, MicroFeatureViewModel>,
     modifier: Modifier = Modifier
 ) {
@@ -105,7 +106,7 @@ fun StableWidget(
     ) {
         // Dynamically generate items for components
         items(
-            items = items,
+            items = items.items,
             key = { it.id },
             itemContent = {
                 val componentViewModel = remember(items) {
@@ -116,8 +117,8 @@ fun StableWidget(
             }
         )
     }
-
 }
+
 @Composable
 fun ComponentItem(
     component: ComponentConfig,
@@ -125,6 +126,7 @@ fun ComponentItem(
 ) {
     when (component.type) {
         "personalisedJob" -> {
+
             JobRecommendation(
                 componentViewModel as PersonalisedJobViewModel,
                 component.id,
@@ -140,13 +142,26 @@ fun JobRecommendation(
     id: String,
     modifier: Modifier = Modifier
 ) {
-    Log.d("MicroFeature", "JobRecommendation: Before collect item Id: $id")
+    Log.d("MicroFeature", "JobRecommendation: Recomposing Before collect item Id: $id")
+
     // This collect triggers the flow in the viewmodel to fetch data from use case
     // @TODO Currently its being called for all 20 items in lazy column which is inefficient
-    val personalisedJob by viewmodel.uiState.collectAsStateWithLifecycle()
-    Log.d("MicroFeature", "JobScreen: id: $id item : $personalisedJob")
 
-    when (personalisedJob) {
+    // Uncomment this to see the issue, with sealed state
+    // val personalisedJob by viewmodel.uiState.collectAsStateWithLifecycle()
+    // StateReducer(id, personalisedJob, modifier = modifier)
+
+    // Working fine when uistate is directly consumed
+    val personalisedJob by viewmodel.uiStateWorking.collectAsStateWithLifecycle()
+    Log.d("MicroFeature", "StateReducer: recomposing $id")
+    JobRecommendationSection(personalisedJob, modifier = modifier)
+}
+
+@Composable
+fun StateReducer(id: String, state: PersonalisedJobViewModel.UiState, modifier: Modifier = Modifier) {
+    Log.d("MicroFeature", "StateReducer: recomposing $id")
+
+    when (state) {
         is PersonalisedJobViewModel.UiState.Loading -> {
             // Loading
         }
@@ -156,10 +171,11 @@ fun JobRecommendation(
         }
 
         is PersonalisedJobViewModel.UiState.Success -> {
-            JobRecommendationSection(
-                (personalisedJob as PersonalisedJobViewModel.UiState.Success).jobSection,
-                modifier = modifier
-            ) // No cast required
+          Text("Item $id ${state.jobSection.sectionTitle}", modifier = Modifier.padding(16.dp))
+//            JobRecommendationSection(
+//                (personalisedJob as PersonalisedJobViewModel.UiState.Success).jobSection,
+//                modifier = modifier
+//            ) // No cast required
         }
     }
 }
@@ -179,9 +195,11 @@ fun JobRecommendationSection(
         modifier = modifier
             .padding(32.dp),
     ) {
-        state.items.map {
-            Text(it.jobTitle)
-        }
+        Text(state.sectionTitle, modifier = Modifier.padding(16.dp))
+
+//        state.items.map {
+//            Text(it.jobTitle)
+//        }
     }
 }
 

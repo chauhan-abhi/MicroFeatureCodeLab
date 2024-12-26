@@ -1,6 +1,7 @@
 package com.example.microfeaturecodelab.presentation
 
 import android.util.Log
+import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.microfeaturecodelab.base.ComponentViewModelFactory
@@ -36,5 +37,10 @@ class JobsViewModel @Inject constructor(
         }
     }
 
-    fun getComponents() = _components
+    fun getComponents() = Widgets(_components)
 }
+
+@Stable
+data class Widgets(
+    val items: List<ComponentConfig>,
+)

@@ -42,6 +42,19 @@ class PersonalisedJobViewModel @AssistedInject constructor(
         initialValue = UiState.Loading
     )
 
+    val uiStateWorking: StateFlow<RecommendedJobSection> = inputFlow.flatMapLatest { input ->
+        Log.d("PersonalisedJobViewModel", "Fetching jobs with input: ${this.hashCode()}")
+        useCase.fetch(input).map {
+            it.toUiModel()
+        }.catch {
+            Log.d("PersonalisedJobViewModel", "Failed to fetch jobs")
+        }
+    }.stateIn(
+        scope = coroutineScope,
+        started = SharingStarted.WhileSubscribed(5000L),
+        initialValue = RecommendedJobSection("Loading", emptyList())
+    )
+
     fun onEvent(event: Event) {
         when (event) {
             is Event.UpdateInput -> {

@@ -4,7 +4,6 @@ import androidx.compose.runtime.Stable
 import com.example.microfeaturecodelab.domain.model.JobRecommendation
 import com.example.microfeaturecodelab.domain.model.JobRecommendations
 
-
 @Stable
 data class RecommendedJobSection(
     val sectionTitle: String,
