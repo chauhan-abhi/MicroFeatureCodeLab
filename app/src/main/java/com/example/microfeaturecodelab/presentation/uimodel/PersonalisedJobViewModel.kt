@@ -29,20 +29,21 @@ class PersonalisedJobViewModel @AssistedInject constructor(
 ): MicroFeatureViewModel {
     private val inputFlow = MutableStateFlow(JobQueryParameter.DEFAULT)
 
-    val uiState: StateFlow<UiState> = inputFlow.flatMapLatest { input ->
-        Log.d("PersonalisedJobViewModel", "Fetching jobs with input: ${this.hashCode()}")
-        useCase.fetch(input).map {
-            UiState.Success(it.toUiModel())
-        }.catch {
-            UiState.Error("Failed to fetch jobs")
-        }
-    }.stateIn(
-        scope = coroutineScope,
-        started = SharingStarted.WhileSubscribed(5000L),
-        initialValue = UiState.Loading
-    )
+    // This is causing unnecessary recomposition on lazy item level
+//    val uiState: StateFlow<UiState> = inputFlow.flatMapLatest { input ->
+//        Log.d("PersonalisedJobViewModel", "Fetching jobs with input: ${this.hashCode()}")
+//        useCase.fetch(input).map {
+//            UiState.Success(it.toUiModel())
+//        }.catch {
+//            UiState.Error("Failed to fetch jobs")
+//        }
+//    }.stateIn(
+//        scope = coroutineScope,
+//        started = SharingStarted.WhileSubscribed(5000L),
+//        initialValue = UiState.Loading
+//    )
 
-    val uiStateWorking: StateFlow<RecommendedJobSection> = inputFlow.flatMapLatest { input ->
+    val uiState: StateFlow<RecommendedJobSection> = inputFlow.flatMapLatest { input ->
         Log.d("PersonalisedJobViewModel", "Fetching jobs with input: ${this.hashCode()}")
         useCase.fetch(input).map {
             it.toUiModel()

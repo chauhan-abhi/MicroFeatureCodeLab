@@ -56,31 +56,10 @@ class MainActivity : ComponentActivity() {
                     JobScreen(
                         modifier = Modifier.padding(innerPadding)
                     )
-                    //TestLazy(modifier = Modifier.padding(innerPadding))
                 }
             }
         }
     }
-}
-
-@Composable
-fun TestLazy(modifier: Modifier = Modifier) {
-    val model = remember { fakeJob() }
-    LazyColumn(modifier) {
-        items(20) {
-            Log.d("MicroFeature", "TextLazy: $it")
-            JobRecommendationSection(model)
-        }
-    }
-}
-
-@Composable
-fun LazyItem(text: String, modifier: Modifier = Modifier) {
-    LaunchedEffect(text) {
-        Log.d("MicroFeature", "LazyItem: LaunchedEffect $text")
-    }
-    Log.d("MicroFeature", "LazyItem: $text")
-    Text("Item $text", modifier = modifier.padding(16.dp))
 }
 
 @Composable
@@ -91,7 +70,6 @@ fun JobScreen(
     val components by remember { mutableStateOf(viewModel.getComponents()) }
     StableWidget(components, viewModel.componentViewModels, modifier = modifier)
 }
-
 
 @Composable
 fun StableWidget(
@@ -148,13 +126,13 @@ fun JobRecommendation(
     // @TODO Currently its being called for all 20 items in lazy column which is inefficient
 
     // Uncomment this to see the issue, with sealed state
-    // val personalisedJob by viewmodel.uiState.collectAsStateWithLifecycle()
-    // StateReducer(id, personalisedJob, modifier = modifier)
+//     val personalisedJob by viewmodel.uiState.collectAsStateWithLifecycle()
+//     StateReducer(id, personalisedJob, modifier = modifier)
 
     // Working fine when uistate is directly consumed
-    val personalisedJob by viewmodel.uiStateWorking.collectAsStateWithLifecycle()
+    val personalisedJob by viewmodel.uiState.collectAsStateWithLifecycle()
     Log.d("MicroFeature", "StateReducer: recomposing $id")
-    JobRecommendationSection(personalisedJob, modifier = modifier)
+    JobRecommendationSection(id, personalisedJob, modifier = modifier)
 }
 
 @Composable
@@ -182,6 +160,7 @@ fun StateReducer(id: String, state: PersonalisedJobViewModel.UiState, modifier: 
 
 @Composable
 fun JobRecommendationSection(
+    id: String,
     state: RecommendedJobSection,
     modifier: Modifier = Modifier
 ) {
@@ -195,11 +174,11 @@ fun JobRecommendationSection(
         modifier = modifier
             .padding(32.dp),
     ) {
-        Text(state.sectionTitle, modifier = Modifier.padding(16.dp))
+        Text("Item $id ${state.sectionTitle}")
 
-//        state.items.map {
-//            Text(it.jobTitle)
-//        }
+        state.items.map {
+            Text(it.jobTitle)
+        }
     }
 }
 
