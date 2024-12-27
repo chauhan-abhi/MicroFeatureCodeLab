@@ -1,9 +1,11 @@
-package com.example.microfeaturecodelab.di
+package com.example.microfeaturecodelab.personalisedjob.di
 
 import com.example.microfeaturecodelab.base.AbstractMicroFeatureComposer
+import com.example.microfeaturecodelab.base.MicroFeatureFactory
 import com.example.microfeaturecodelab.base.MicroFeatureViewModel
-import com.example.microfeaturecodelab.premiumApplicant.PremiumApplicantComposer
+import com.example.microfeaturecodelab.di.ComponentTypeKey
 import com.example.microfeaturecodelab.personalisedjob.presentation.composables.JobRecommendationComposer
+import com.example.microfeaturecodelab.personalisedjob.presentation.uimodel.PersonalisedJobViewModel
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -12,7 +14,7 @@ import dagger.multibindings.IntoMap
 
 @Module
 @InstallIn(ViewModelComponent::class)
-interface ComponentComposerModule {
+interface PersonalisedComponentModule {
 
     @Binds
     @IntoMap
@@ -21,6 +23,7 @@ interface ComponentComposerModule {
 
     @Binds
     @IntoMap
-    @ComponentTypeKey("premiumApplicant")
-    fun bindPremiumApplicantComposer(composer: PremiumApplicantComposer): AbstractMicroFeatureComposer<out MicroFeatureViewModel>
+    @ComponentTypeKey("personalisedJob")
+    fun bindPersonalisedViewModel(viewmodelFactory: PersonalisedJobViewModel.Factory): MicroFeatureFactory<out MicroFeatureViewModel>
+
 }

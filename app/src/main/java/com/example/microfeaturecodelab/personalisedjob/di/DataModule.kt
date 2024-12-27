@@ -1,4 +1,4 @@
-package com.example.microfeaturecodelab.di
+package com.example.microfeaturecodelab.personalisedjob.di
 
 import com.example.microfeaturecodelab.personalisedjob.data.JobsRepositoryImpl
 import com.example.microfeaturecodelab.personalisedjob.data.network.DataSource

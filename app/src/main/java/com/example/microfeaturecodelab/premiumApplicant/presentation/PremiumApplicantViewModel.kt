@@ -1,4 +1,4 @@
-package com.example.microfeaturecodelab.premiumApplicant
+package com.example.microfeaturecodelab.premiumApplicant.presentation
 
 import com.example.microfeaturecodelab.base.MicroFeatureFactory
 import com.example.microfeaturecodelab.base.MicroFeatureViewModel
