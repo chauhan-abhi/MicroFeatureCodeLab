@@ -1,12 +1,12 @@
-package com.example.microfeaturecodelab.presentation.uimodel
+package com.example.microfeaturecodelab.personalisedjob.presentation.uimodel
 
 import android.util.Log
 import com.example.microfeaturecodelab.base.MicroFeatureFactory
 import com.example.microfeaturecodelab.base.MicroFeatureViewModel
-import com.example.microfeaturecodelab.domain.JobQueryParameter
-import com.example.microfeaturecodelab.domain.GetJobsUseCase
-import com.example.microfeaturecodelab.presentation.model.RecommendedJobSection
-import com.example.microfeaturecodelab.presentation.model.toUiModel
+import com.example.microfeaturecodelab.personalisedjob.domain.JobQueryParameter
+import com.example.microfeaturecodelab.personalisedjob.domain.GetJobsUseCase
+import com.example.microfeaturecodelab.personalisedjob.presentation.model.RecommendedJobSection
+import com.example.microfeaturecodelab.personalisedjob.presentation.model.toUiModel
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject

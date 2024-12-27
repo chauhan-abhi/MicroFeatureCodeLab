@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.example.microfeaturecodelab.data.network
+package com.example.microfeaturecodelab.personalisedjob.data.network
 
 import java.io.InputStream
 

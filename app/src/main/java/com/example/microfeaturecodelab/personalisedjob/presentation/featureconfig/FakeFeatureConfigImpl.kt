@@ -1,4 +1,4 @@
-package com.example.microfeaturecodelab.presentation.featureconfig
+package com.example.microfeaturecodelab.personalisedjob.presentation.featureconfig
 
 import javax.inject.Inject
 

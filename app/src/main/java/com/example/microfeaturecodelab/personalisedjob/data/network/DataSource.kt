@@ -1,8 +1,8 @@
-package com.example.microfeaturecodelab.data.network
+package com.example.microfeaturecodelab.personalisedjob.data.network
 
 import JvmUnitTestDemoAssetManager
-import com.example.microfeaturecodelab.data.ApiParameters
-import com.example.microfeaturecodelab.data.model.JobNetworkResponse
+import com.example.microfeaturecodelab.personalisedjob.data.ApiParameters
+import com.example.microfeaturecodelab.personalisedjob.data.model.JobNetworkResponse
 import com.example.microfeaturecodelab.di.AppDispatchers
 import com.example.microfeaturecodelab.di.Dispatcher
 import kotlinx.coroutines.CoroutineDispatcher

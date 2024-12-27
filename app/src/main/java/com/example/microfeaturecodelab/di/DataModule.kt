@@ -1,9 +1,9 @@
 package com.example.microfeaturecodelab.di
 
-import com.example.microfeaturecodelab.data.JobsRepositoryImpl
-import com.example.microfeaturecodelab.data.network.DataSource
-import com.example.microfeaturecodelab.data.network.LocalDataSourceImpl
-import com.example.microfeaturecodelab.domain.JobsRepository
+import com.example.microfeaturecodelab.personalisedjob.data.JobsRepositoryImpl
+import com.example.microfeaturecodelab.personalisedjob.data.network.DataSource
+import com.example.microfeaturecodelab.personalisedjob.data.network.LocalDataSourceImpl
+import com.example.microfeaturecodelab.personalisedjob.domain.JobsRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

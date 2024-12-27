@@ -1,7 +1,7 @@
 package com.example.microfeaturecodelab.di
 
 import android.content.Context
-import com.example.microfeaturecodelab.data.network.DemoAssetManager
+import com.example.microfeaturecodelab.personalisedjob.data.network.DemoAssetManager
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

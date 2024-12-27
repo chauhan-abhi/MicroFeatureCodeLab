@@ -1,7 +1,7 @@
 package com.example.microfeaturecodelab.di
 
-import com.example.microfeaturecodelab.presentation.featureconfig.FakeFeatureConfigImpl
-import com.example.microfeaturecodelab.presentation.featureconfig.FeatureConfig
+import com.example.microfeaturecodelab.personalisedjob.presentation.featureconfig.FakeFeatureConfigImpl
+import com.example.microfeaturecodelab.personalisedjob.presentation.featureconfig.FeatureConfig
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

@@ -1,4 +1,4 @@
-package com.example.microfeaturecodelab.domain
+package com.example.microfeaturecodelab.personalisedjob.domain
 
 import javax.inject.Inject
 

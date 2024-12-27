@@ -1,13 +1,14 @@
-package com.example.microfeaturecodelab.presentation
+package com.example.microfeaturecodelab.personalisedjob.presentation
 
 import android.util.Log
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.microfeaturecodelab.base.AbstractMicroFeatureComposer
 import com.example.microfeaturecodelab.base.ComponentViewModelFactory
 import com.example.microfeaturecodelab.base.MicroFeatureViewModel
-import com.example.microfeaturecodelab.presentation.featureconfig.ComponentConfig
-import com.example.microfeaturecodelab.presentation.featureconfig.FeatureConfig
+import com.example.microfeaturecodelab.personalisedjob.presentation.featureconfig.ComponentConfig
+import com.example.microfeaturecodelab.personalisedjob.presentation.featureconfig.FeatureConfig
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -19,8 +20,12 @@ class JobsViewModel @Inject constructor(
 ) : ViewModel() {
 
     private lateinit var _components: List<ComponentConfig>
+
     private val _componentViewModels = mutableMapOf<String, MicroFeatureViewModel>()
     val componentViewModels: Map<String, MicroFeatureViewModel> get() = _componentViewModels
+
+    private val _componentComposers = mutableMapOf<String, AbstractMicroFeatureComposer<out MicroFeatureViewModel>>()
+    val componentComposers: Map<String, AbstractMicroFeatureComposer<out MicroFeatureViewModel>> get() = _componentComposers
 
     init {
         Log.d("JobsViewModel", "JobsViewModel created")
@@ -31,8 +36,9 @@ class JobsViewModel @Inject constructor(
         viewModelScope.launch {
             _components = featureConfig.getComponentsConfig()
             _components.forEach { componentConfig ->
-                val viewModel = componentViewModelFactory.create(componentConfig, viewModelScope)
-                _componentViewModels[componentConfig.id] = viewModel
+                val (componentVM, componentComposer) = componentViewModelFactory.create(componentConfig, viewModelScope)
+                componentVM?.let { _componentViewModels[componentConfig.id] = componentVM }
+                componentComposer?.let { _componentComposers[componentConfig.id] = componentComposer }
             }
         }
     }

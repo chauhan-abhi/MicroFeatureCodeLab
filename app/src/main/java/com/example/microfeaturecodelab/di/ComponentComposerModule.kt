@@ -3,7 +3,7 @@ package com.example.microfeaturecodelab.di
 import com.example.microfeaturecodelab.base.AbstractMicroFeatureComposer
 import com.example.microfeaturecodelab.base.MicroFeatureViewModel
 import com.example.microfeaturecodelab.premiumApplicant.PremiumApplicantComposer
-import com.example.microfeaturecodelab.presentation.composables.JobRecommendationComposer
+import com.example.microfeaturecodelab.personalisedjob.presentation.composables.JobRecommendationComposer
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

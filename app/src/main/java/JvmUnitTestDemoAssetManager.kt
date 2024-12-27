@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import com.example.microfeaturecodelab.data.network.DemoAssetManager
+import com.example.microfeaturecodelab.personalisedjob.data.network.DemoAssetManager
 import java.io.File
 import java.io.InputStream
 import java.util.Properties
