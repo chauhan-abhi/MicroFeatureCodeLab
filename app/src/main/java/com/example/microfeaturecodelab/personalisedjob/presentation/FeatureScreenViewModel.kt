@@ -13,7 +13,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class JobsViewModel @Inject constructor(
+class FeatureScreenViewModel @Inject constructor(
     private val featureConfig: FeatureConfig,
     private val componentViewModelFactory: ComponentViewModelFactory,
 ) : ViewModel() {

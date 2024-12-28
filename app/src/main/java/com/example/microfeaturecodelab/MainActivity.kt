@@ -1,4 +1,4 @@
-package com.example.microfeaturecodelab.personalisedjob.presentation
+package com.example.microfeaturecodelab
 
 import android.os.Bundle
 import android.util.Log
@@ -21,6 +21,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.microfeaturecodelab.personalisedjob.presentation.FeatureScreenViewModel
+import com.example.microfeaturecodelab.personalisedjob.presentation.Widgets
 import com.example.microfeaturecodelab.personalisedjob.presentation.featureconfig.ComponentConfig
 import com.example.microfeaturecodelab.personalisedjob.presentation.featureconfig.ComponentDependencies
 import com.example.microfeaturecodelab.ui.theme.MicroFeatureCodelabTheme
@@ -34,7 +36,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             MicroFeatureCodelabTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    JobScreen(
+                    SelfDrivenSingleUiComponentsScreen(
                         modifier = Modifier.padding(innerPadding)
                     )
                 }
@@ -43,10 +45,14 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+/*
+* This screen is responsible for rendering the components in the list
+* while fetching their own data individually and rendering them in a LazyList
+ */
 @Composable
-fun JobScreen(
+fun SelfDrivenSingleUiComponentsScreen(
     modifier: Modifier = Modifier,
-    viewModel: JobsViewModel = hiltViewModel()
+    viewModel: FeatureScreenViewModel = hiltViewModel()
 ) {
     val components by remember { mutableStateOf(viewModel.getComponents()) }
     ComponentList(
@@ -102,6 +108,6 @@ fun ComponentItem(
 @Composable
 fun GreetingPreview() {
     MicroFeatureCodelabTheme {
-        JobScreen()
+        SelfDrivenSingleUiComponentsScreen()
     }
 }
