@@ -13,7 +13,12 @@ abstract class AbstractMicroFeatureComposer<V : MicroFeatureViewModel> {
         modifier: Modifier,
         onAction: (Any) -> Unit,
     ) {
-        Content(config = config, viewModel = viewModel as V, modifier = modifier, onAction = onAction)
+        Content(
+            viewModel = viewModel as V,
+            config = config,
+            modifier = modifier,
+            onAction = onAction
+        )
     }
 
     @Composable

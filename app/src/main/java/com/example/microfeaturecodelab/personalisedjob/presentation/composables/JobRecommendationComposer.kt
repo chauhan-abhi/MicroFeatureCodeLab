@@ -37,8 +37,7 @@ class JobRecommendationComposer @Inject constructor() :
         id: String,
         modifier: Modifier = Modifier
     ) {
-        Log.d("MicroFeature", "JobRecommendation: Recomposing Before collect item Id: $id")
-
+        Log.d("MicroFeature", "JobRecommendationComposer: Recomposing ${viewmodel.hashCode()}")
         // This collect triggers the flow in the viewmodel to fetch data from use case
         // @TODO Currently its being called for all 20 items in lazy column which is inefficient
 

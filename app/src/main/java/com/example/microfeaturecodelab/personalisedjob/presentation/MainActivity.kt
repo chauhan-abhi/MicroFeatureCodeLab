@@ -21,9 +21,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.microfeaturecodelab.base.AbstractMicroFeatureComposer
-import com.example.microfeaturecodelab.base.MicroFeatureViewModel
 import com.example.microfeaturecodelab.personalisedjob.presentation.featureconfig.ComponentConfig
+import com.example.microfeaturecodelab.personalisedjob.presentation.featureconfig.ComponentDependencies
 import com.example.microfeaturecodelab.ui.theme.MicroFeatureCodelabTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -52,8 +51,7 @@ fun JobScreen(
     val components by remember { mutableStateOf(viewModel.getComponents()) }
     ComponentList(
         items = components,
-        vmMap = viewModel.componentViewModels,
-        composerMap = viewModel.componentComposers,
+        componentDependencyMap = viewModel.componentDependencyMap,
         modifier = modifier
     )
 }
@@ -61,8 +59,7 @@ fun JobScreen(
 @Composable
 fun ComponentList(
     items: Widgets,
-    vmMap: Map<String, MicroFeatureViewModel>,
-    composerMap: Map<String, AbstractMicroFeatureComposer<out MicroFeatureViewModel>>,
+    componentDependencyMap: Map<String, ComponentDependencies>,
     modifier: Modifier = Modifier
 ) {
     LazyColumn(
@@ -74,12 +71,14 @@ fun ComponentList(
         items(
             items = items.items,
             key = { it.id },
-            itemContent = {
-                val (componentViewModel, componentComposer) = remember(items) {
-                    vmMap[it.id] to composerMap[it.id]
+            itemContent = { component ->
+                val componentDependency = remember(items) {
+                    componentDependencyMap[component.id]
                 }
-                Log.d("MicroFeature", "ComponentList:index ${it.id}")
-                ComponentItem(it, componentViewModel, componentComposer)
+                Log.d("MicroFeature", "ComponentList:index ${component.id}")
+                componentDependency?.let {
+                    ComponentItem(component, componentDependency)
+                }
             }
         )
     }
@@ -88,12 +87,12 @@ fun ComponentList(
 @Composable
 fun ComponentItem(
     component: ComponentConfig,
-    componentViewModel: MicroFeatureViewModel?,
-    componentComposer: AbstractMicroFeatureComposer<out MicroFeatureViewModel>?
+    componentDependency: ComponentDependencies,
 ) {
-    componentComposer?.ComposerContent(
+    Log.d("MicroFeature", "ComponentItem: ${component.id} vm:${componentDependency.componentVM}")
+    componentDependency.componentComposer.ComposerContent(
+        viewModel = componentDependency.componentVM,
         config = component,
-        viewModel = componentViewModel!!,
         modifier = Modifier.fillMaxWidth(),
         onAction = {}
     )
