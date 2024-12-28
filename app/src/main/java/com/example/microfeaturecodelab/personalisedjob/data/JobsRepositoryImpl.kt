@@ -1,10 +1,10 @@
-package com.example.microfeaturecodelab.data
+package com.example.microfeaturecodelab.personalisedjob.data
 
 import android.util.Log
-import com.example.microfeaturecodelab.data.model.toDomain
-import com.example.microfeaturecodelab.data.network.DataSource
-import com.example.microfeaturecodelab.domain.JobQueryParameter
-import com.example.microfeaturecodelab.domain.JobsRepository
+import com.example.microfeaturecodelab.personalisedjob.data.model.toDomain
+import com.example.microfeaturecodelab.personalisedjob.data.network.DataSource
+import com.example.microfeaturecodelab.personalisedjob.domain.JobQueryParameter
+import com.example.microfeaturecodelab.personalisedjob.domain.JobsRepository
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject

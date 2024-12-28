@@ -1,7 +1,7 @@
-package com.example.microfeaturecodelab.data.model
+package com.example.microfeaturecodelab.personalisedjob.data.model
 
-import com.example.microfeaturecodelab.domain.model.JobRecommendation
-import com.example.microfeaturecodelab.domain.model.JobRecommendations
+import com.example.microfeaturecodelab.personalisedjob.domain.model.JobRecommendation
+import com.example.microfeaturecodelab.personalisedjob.domain.model.JobRecommendations
 import kotlinx.serialization.Serializable
 
 @Serializable

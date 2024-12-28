@@ -1,4 +1,4 @@
-package com.example.microfeaturecodelab.domain.model
+package com.example.microfeaturecodelab.personalisedjob.domain.model
 
 data class JobRecommendations(
     val sectionTitle: String,

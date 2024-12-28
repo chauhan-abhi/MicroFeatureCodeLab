@@ -1,9 +1,12 @@
-package com.example.microfeaturecodelab.presentation.uimodel
+package com.example.microfeaturecodelab.personalisedjob.presentation.uimodel
 
-import com.example.microfeaturecodelab.domain.JobQueryParameter
-import com.example.microfeaturecodelab.domain.GetJobsUseCase
-import com.example.microfeaturecodelab.presentation.model.RecommendedJobSection
-import com.example.microfeaturecodelab.presentation.model.toUiModel
+import android.util.Log
+import com.example.microfeaturecodelab.base.MicroFeatureFactory
+import com.example.microfeaturecodelab.base.MicroFeatureViewModel
+import com.example.microfeaturecodelab.personalisedjob.domain.JobQueryParameter
+import com.example.microfeaturecodelab.personalisedjob.domain.GetJobsUseCase
+import com.example.microfeaturecodelab.personalisedjob.presentation.model.RecommendedJobSection
+import com.example.microfeaturecodelab.personalisedjob.presentation.model.toUiModel
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -23,19 +26,34 @@ import kotlinx.coroutines.launch
 class PersonalisedJobViewModel @AssistedInject constructor(
     private val useCase: GetJobsUseCase,
     @Assisted val coroutineScope: CoroutineScope
-) {
+): MicroFeatureViewModel {
     private val inputFlow = MutableStateFlow(JobQueryParameter.DEFAULT)
 
-    val uiState: StateFlow<UiState> = inputFlow.flatMapLatest { input ->
+    // This is causing unnecessary recomposition on lazy item level
+//    val uiState: StateFlow<UiState> = inputFlow.flatMapLatest { input ->
+//        Log.d("PersonalisedJobViewModel", "Fetching jobs with input: ${this.hashCode()}")
+//        useCase.fetch(input).map {
+//            UiState.Success(it.toUiModel())
+//        }.catch {
+//            UiState.Error("Failed to fetch jobs")
+//        }
+//    }.stateIn(
+//        scope = coroutineScope,
+//        started = SharingStarted.WhileSubscribed(5000L),
+//        initialValue = UiState.Loading
+//    )
+
+    val uiState: StateFlow<RecommendedJobSection> = inputFlow.flatMapLatest { input ->
+        Log.d("PersonalisedJobViewModel", "Fetching jobs with input: ${this.hashCode()}")
         useCase.fetch(input).map {
-            UiState.Success(it.toUiModel())
+            it.toUiModel()
         }.catch {
-            UiState.Error("Failed to fetch jobs")
+            Log.d("PersonalisedJobViewModel", "Failed to fetch jobs")
         }
     }.stateIn(
         scope = coroutineScope,
         started = SharingStarted.WhileSubscribed(5000L),
-        initialValue = UiState.Loading
+        initialValue = RecommendedJobSection("Loading", emptyList())
     )
 
     fun onEvent(event: Event) {
@@ -76,8 +94,6 @@ class PersonalisedJobViewModel @AssistedInject constructor(
     }
 
     @AssistedFactory
-    interface Factory {
-        fun create(coroutineScope: CoroutineScope): PersonalisedJobViewModel
-    }
+    interface Factory: MicroFeatureFactory<PersonalisedJobViewModel>
 
 }
