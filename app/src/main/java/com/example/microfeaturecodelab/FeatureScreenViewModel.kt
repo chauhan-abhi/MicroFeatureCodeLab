@@ -9,6 +9,8 @@ import com.example.microfeaturecodelab.personalisedjob.presentation.featureconfi
 import com.example.microfeaturecodelab.personalisedjob.presentation.featureconfig.ComponentDependencies
 import com.example.microfeaturecodelab.personalisedjob.presentation.featureconfig.FeatureConfig
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -18,6 +20,7 @@ class FeatureScreenViewModel @Inject constructor(
     private val componentViewModelFactory: ComponentViewModelFactory,
 ) : ViewModel() {
 
+    val state = MutableStateFlow(Widgets(emptyList(), true))
     private lateinit var _components: List<ComponentConfig>
 
     private val _componentDependencyMap = mutableMapOf<String, ComponentDependencies>()
@@ -36,13 +39,20 @@ class FeatureScreenViewModel @Inject constructor(
                     componentViewModelFactory.create(componentConfig, viewModelScope)
                 _componentDependencyMap[componentConfig.id] = componentDependency
             }
+            state.update {
+                Widgets(
+                    items = _components,
+                    isLoading = false
+                )
+            }
         }
     }
 
-    fun getComponents() = Widgets(_components)
+    //fun getComponents() = Widgets(_components)
 }
 
 @Stable
 data class Widgets(
     val items: List<ComponentConfig>,
+    val isLoading: Boolean = false,
 )
