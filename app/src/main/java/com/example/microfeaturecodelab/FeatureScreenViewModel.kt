@@ -1,4 +1,4 @@
-package com.example.microfeaturecodelab.personalisedjob.presentation
+package com.example.microfeaturecodelab
 
 import android.util.Log
 import androidx.compose.runtime.Stable

@@ -21,8 +21,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.microfeaturecodelab.personalisedjob.presentation.FeatureScreenViewModel
-import com.example.microfeaturecodelab.personalisedjob.presentation.Widgets
 import com.example.microfeaturecodelab.personalisedjob.presentation.featureconfig.ComponentConfig
 import com.example.microfeaturecodelab.personalisedjob.presentation.featureconfig.ComponentDependencies
 import com.example.microfeaturecodelab.ui.theme.MicroFeatureCodelabTheme
@@ -74,7 +72,20 @@ fun ComponentList(
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         // Dynamically generate items for components
-        items(
+        items.items.map { component ->
+            val componentDependency = componentDependencyMap[component.id]
+            Log.d("MicroFeature", "ComponentList:index ${component.id}")
+            componentDependency?.let {
+                componentDependency.componentComposer.renderItem(
+                    viewModel = componentDependency.componentVM,
+                    config = component,
+                    scope = this,
+                    modifier = Modifier.fillMaxWidth(),
+                    onAction = {}
+                )
+            }
+        }
+        /*items(
             items = items.items,
             key = { it.id },
             itemContent = { component ->
@@ -86,23 +97,23 @@ fun ComponentList(
                     ComponentItem(component, componentDependency)
                 }
             }
-        )
+        )*/
     }
 }
 
-@Composable
-fun ComponentItem(
-    component: ComponentConfig,
-    componentDependency: ComponentDependencies,
-) {
-    Log.d("MicroFeature", "ComponentItem: ${component.id} vm:${componentDependency.componentVM}")
-    componentDependency.componentComposer.ComposerContent(
-        viewModel = componentDependency.componentVM,
-        config = component,
-        modifier = Modifier.fillMaxWidth(),
-        onAction = {}
-    )
-}
+//@Composable
+//fun ComponentItem(
+//    component: ComponentConfig,
+//    componentDependency: ComponentDependencies,
+//) {
+//    Log.d("MicroFeature", "ComponentItem: ${component.id} vm:${componentDependency.componentVM}")
+//    componentDependency.componentComposer.ComposerContent(
+//        viewModel = componentDependency.componentVM,
+//        config = component,
+//        modifier = Modifier.fillMaxWidth(),
+//        onAction = {}
+//    )
+//}
 
 @Preview(showBackground = true)
 @Composable

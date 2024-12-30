@@ -2,6 +2,7 @@ package com.example.microfeaturecodelab.premiumApplicant.presentation
 
 import android.util.Log
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -15,27 +16,29 @@ import com.example.microfeaturecodelab.base.AbstractMicroFeatureComposer
 import com.example.microfeaturecodelab.personalisedjob.presentation.featureconfig.ComponentConfig
 import javax.inject.Inject
 
-class PremiumApplicantComposer @Inject constructor(): AbstractMicroFeatureComposer<PremiumApplicantViewModel>() {
-    @Composable
-    override fun Content(
+class PremiumApplicantComposer @Inject constructor() :
+    AbstractMicroFeatureComposer<PremiumApplicantViewModel>() {
+    override fun LazyListScope.content(
         viewModel: PremiumApplicantViewModel,
         config: ComponentConfig,
         modifier: Modifier,
         onAction: (Any) -> Unit
     ) {
-        Log.d("PremiumApplicantComposer", "PremiumApplicantComposer: ${config.id}")
-        LaunchedEffect(viewModel) {
-            Log.d("JobRecommendationSection", "$viewModel Launched Effect")
-        }
-        Card(
-            shape = RoundedCornerShape(16.dp),
-            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-            modifier = modifier
-                .padding(32.dp),
-        ) {
-            Text("Item ${config.id}")
-            Text("Premium applicant")
+        item {
+            Log.d("PremiumApplicantComposer", "PremiumApplicantComposer: ${config.id}")
+            LaunchedEffect(viewModel) {
+                Log.d("JobRecommendationSection", "$viewModel Launched Effect")
+            }
+            Card(
+                shape = RoundedCornerShape(16.dp),
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                modifier = modifier
+                    .padding(32.dp),
+            ) {
+                Text("Item ${config.id}")
+                Text("Premium applicant")
 
+            }
         }
     }
 }

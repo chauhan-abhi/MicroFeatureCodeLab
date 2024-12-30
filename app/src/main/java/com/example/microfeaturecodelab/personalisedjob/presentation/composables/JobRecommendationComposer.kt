@@ -2,6 +2,7 @@ package com.example.microfeaturecodelab.personalisedjob.presentation.composables
 
 import android.util.Log
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -21,14 +22,16 @@ import javax.inject.Inject
 
 class JobRecommendationComposer @Inject constructor() :
     AbstractMicroFeatureComposer<PersonalisedJobViewModel>() {
-    @Composable
-    override fun Content(
+
+    override fun LazyListScope.content(
         viewModel: PersonalisedJobViewModel,
         config: ComponentConfig,
         modifier: Modifier,
         onAction: (Any) -> Unit
     ) {
-        JobRecommendation(viewmodel = viewModel, id = config.id, modifier = modifier)
+        item(config.id) {
+            JobRecommendation(viewmodel = viewModel, id = config.id, modifier = modifier)
+        }
     }
 
     @Composable
@@ -75,5 +78,4 @@ class JobRecommendationComposer @Inject constructor() :
             }
         }
     }
-
 }
