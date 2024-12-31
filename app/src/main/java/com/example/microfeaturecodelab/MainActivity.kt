@@ -35,7 +35,9 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             MicroFeatureCodelabTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+                Scaffold(
+                    modifier = Modifier.fillMaxSize()
+                ) { innerPadding ->
                     SelfDrivenSingleUiComponentsScreen(
                         modifier = Modifier.padding(innerPadding)
                     )
@@ -56,7 +58,7 @@ fun SelfDrivenSingleUiComponentsScreen(
 ) {
     val components by viewModel.state.collectAsStateWithLifecycle()
     ComponentList(
-        items = components,
+        widgets = components,
         componentDependencyMap = viewModel.componentDependencyMap,
         modifier = modifier
     )
@@ -64,11 +66,11 @@ fun SelfDrivenSingleUiComponentsScreen(
 
 @Composable
 fun ComponentList(
-    items: Widgets,
+    widgets: Widgets,
     componentDependencyMap: Map<String, ComponentDependencies>,
     modifier: Modifier = Modifier
 ) {
-    if (items.isLoading) {
+    if (widgets.isLoading) {
         // Show loading state
         LoadingIndicator(modifier = modifier)
         return
@@ -79,7 +81,7 @@ fun ComponentList(
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         // Dynamically generate items for components
-        items.items.forEach { component ->
+        widgets.items.forEach { component ->
             val componentDependency = componentDependencyMap[component.id]
             Log.d("MicroFeature", "ComponentList:index ${component.id}")
             componentDependency?.let {

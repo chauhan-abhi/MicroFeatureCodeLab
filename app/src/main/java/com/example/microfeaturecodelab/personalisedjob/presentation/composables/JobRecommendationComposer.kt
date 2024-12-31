@@ -1,6 +1,7 @@
 package com.example.microfeaturecodelab.personalisedjob.presentation.composables
 
 import android.util.Log
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -42,7 +43,8 @@ class JobRecommendationComposer @Inject constructor() :
     ) {
         Log.d("MicroFeature", "JobRecommendationComposer: Recomposing ${viewmodel.hashCode()}")
         // This collect triggers the flow in the viewmodel to fetch data from use case
-        // @TODO Currently its being called for all 20 items in lazy column which is inefficient
+        // @TODO ISSUE #1
+        // Currently its being called for all 20 items in lazy column which is inefficient
 
         // Uncomment this to see the issue, with sealed state
 //        val personalisedJob by viewmodel.uiState.collectAsStateWithLifecycle()
@@ -65,16 +67,20 @@ class JobRecommendationComposer @Inject constructor() :
             Log.d("JobRecommendationSection", "$id Launched Effect")
         }
         Card(
-            shape = RoundedCornerShape(16.dp),
-            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+            shape = RoundedCornerShape(8.dp),
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
             modifier = modifier
-                .padding(32.dp),
+                .padding(vertical = 4.dp),
         ) {
-            Text("Item $id")
-            Text(state.sectionTitle)
+            Column(Modifier.padding(12.dp)) {
+                Text(
+                    "Item $id",
+                    style = MaterialTheme.typography.headlineSmall
+                )
 
-            state.items.map {
-                Text(it.jobTitle)
+                state.items.map {
+                    Text(it.jobTitle, style = MaterialTheme.typography.bodyMedium)
+                }
             }
         }
     }

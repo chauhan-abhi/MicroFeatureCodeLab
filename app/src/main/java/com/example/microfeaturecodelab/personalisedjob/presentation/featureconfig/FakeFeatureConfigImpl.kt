@@ -23,14 +23,15 @@ class FakeFeatureConfigImpl @Inject constructor(
         return withContext(ioDispatcher) {
             Log.d("MicroFeature", "Fetching widgets ")
             delay(2000)
-            val type1List =  (1..20).map {
+            val type1List =  (1..5).map {
                 ComponentConfig(it.toString(), "personalisedJob")
             }
-            val type2List = (25..30).map {
+            val type2List = (6..10).map {
                 ComponentConfig(it.toString(), "premiumApplicant")
             }
+            val type3List = ComponentConfig("11", "recentSearches", ItemType.LIST)
             Log.d("MicroFeature", "Fetched widgets ")
-            type1List + type2List
+            type1List + type2List + type3List
         }
     }
 }
