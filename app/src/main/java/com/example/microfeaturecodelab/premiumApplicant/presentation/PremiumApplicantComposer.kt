@@ -12,6 +12,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.LifecycleOwner
 import com.example.microfeaturecodelab.base.AbstractMicroFeatureComposer
 import com.example.microfeaturecodelab.personalisedjob.presentation.featureconfig.ComponentConfig
 import javax.inject.Inject
@@ -21,8 +22,9 @@ class PremiumApplicantComposer @Inject constructor() :
     override fun LazyListScope.content(
         viewModel: PremiumApplicantViewModel,
         config: ComponentConfig,
+        lifecycle: LifecycleOwner,
         modifier: Modifier,
-        onAction: (Any) -> Unit
+        onAction: (Any) -> Unit,
     ) {
         item {
             Log.d("PremiumApplicantComposer", "PremiumApplicantComposer: ${config.id}")

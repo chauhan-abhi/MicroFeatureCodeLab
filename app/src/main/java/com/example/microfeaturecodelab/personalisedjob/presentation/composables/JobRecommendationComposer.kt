@@ -14,6 +14,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.microfeaturecodelab.base.AbstractMicroFeatureComposer
 import com.example.microfeaturecodelab.personalisedjob.presentation.featureconfig.ComponentConfig
@@ -27,8 +28,9 @@ class JobRecommendationComposer @Inject constructor() :
     override fun LazyListScope.content(
         viewModel: PersonalisedJobViewModel,
         config: ComponentConfig,
+        lifecycle: LifecycleOwner,
         modifier: Modifier,
-        onAction: (Any) -> Unit
+        onAction: (Any) -> Unit,
     ) {
         item(config.id) {
             JobRecommendation(viewmodel = viewModel, id = config.id, modifier = modifier)

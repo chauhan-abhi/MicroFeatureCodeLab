@@ -23,8 +23,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.microfeaturecodelab.personalisedjob.presentation.featureconfig.ComponentDependencies
+import com.example.microfeaturecodelab.personalisedjob.presentation.featureconfig.ItemType
 import com.example.microfeaturecodelab.ui.theme.MicroFeatureCodelabTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -75,6 +77,7 @@ fun ComponentList(
         LoadingIndicator(modifier = modifier)
         return
     }
+    val lifecycle = LocalLifecycleOwner.current
     LazyColumn(
         modifier = modifier,
         contentPadding = PaddingValues(16.dp),
@@ -89,6 +92,7 @@ fun ComponentList(
                     viewModel = componentDependency.componentVM,
                     config = component,
                     scope = this,
+                    lifecycle = lifecycle,
                     modifier = Modifier.fillMaxWidth(),
                     onAction = {}
                 )
