@@ -7,8 +7,15 @@ import com.example.microfeaturecodelab.base.MicroFeatureViewModel
 @Stable
 data class ComponentConfig(
     val id: String,
-    val type: String
+    val type: String,
+    val itemType: ItemType = ItemType.ITEM
 )
+
+enum class ItemType {
+    ITEM,
+    LIST,
+    STICKY
+}
 
 @Stable
 data class ComponentDependencies(

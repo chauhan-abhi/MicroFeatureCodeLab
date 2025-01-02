@@ -1,7 +1,9 @@
 package com.example.microfeaturecodelab.personalisedjob.presentation.composables
 
 import android.util.Log
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -12,6 +14,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.microfeaturecodelab.base.AbstractMicroFeatureComposer
 import com.example.microfeaturecodelab.personalisedjob.presentation.featureconfig.ComponentConfig
@@ -21,14 +24,17 @@ import javax.inject.Inject
 
 class JobRecommendationComposer @Inject constructor() :
     AbstractMicroFeatureComposer<PersonalisedJobViewModel>() {
-    @Composable
-    override fun Content(
+
+    override fun LazyListScope.content(
         viewModel: PersonalisedJobViewModel,
         config: ComponentConfig,
+        lifecycle: LifecycleOwner,
         modifier: Modifier,
-        onAction: (Any) -> Unit
+        onAction: (Any) -> Unit,
     ) {
-        JobRecommendation(viewmodel = viewModel, id = config.id, modifier = modifier)
+        item(config.id) {
+            JobRecommendation(viewmodel = viewModel, id = config.id, modifier = modifier)
+        }
     }
 
     @Composable
@@ -39,7 +45,8 @@ class JobRecommendationComposer @Inject constructor() :
     ) {
         Log.d("MicroFeature", "JobRecommendationComposer: Recomposing ${viewmodel.hashCode()}")
         // This collect triggers the flow in the viewmodel to fetch data from use case
-        // @TODO Currently its being called for all 20 items in lazy column which is inefficient
+        // @TODO ISSUE #1
+        // Currently its being called for all 20 items in lazy column which is inefficient
 
         // Uncomment this to see the issue, with sealed state
 //        val personalisedJob by viewmodel.uiState.collectAsStateWithLifecycle()
@@ -62,18 +69,21 @@ class JobRecommendationComposer @Inject constructor() :
             Log.d("JobRecommendationSection", "$id Launched Effect")
         }
         Card(
-            shape = RoundedCornerShape(16.dp),
-            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+            shape = RoundedCornerShape(8.dp),
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
             modifier = modifier
-                .padding(32.dp),
+                .padding(vertical = 4.dp),
         ) {
-            Text("Item $id")
-            Text(state.sectionTitle)
+            Column(Modifier.padding(12.dp)) {
+                Text(
+                    "Item $id",
+                    style = MaterialTheme.typography.headlineSmall
+                )
 
-            state.items.map {
-                Text(it.jobTitle)
+                state.items.map {
+                    Text(it.jobTitle, style = MaterialTheme.typography.bodyMedium)
+                }
             }
         }
     }
-
 }

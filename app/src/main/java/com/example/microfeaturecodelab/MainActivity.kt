@@ -6,25 +6,27 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.microfeaturecodelab.personalisedjob.presentation.FeatureScreenViewModel
-import com.example.microfeaturecodelab.personalisedjob.presentation.Widgets
-import com.example.microfeaturecodelab.personalisedjob.presentation.featureconfig.ComponentConfig
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.microfeaturecodelab.personalisedjob.presentation.featureconfig.ComponentDependencies
+import com.example.microfeaturecodelab.personalisedjob.presentation.featureconfig.ItemType
 import com.example.microfeaturecodelab.ui.theme.MicroFeatureCodelabTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -35,7 +37,9 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             MicroFeatureCodelabTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+                Scaffold(
+                    modifier = Modifier.fillMaxSize()
+                ) { innerPadding ->
                     SelfDrivenSingleUiComponentsScreen(
                         modifier = Modifier.padding(innerPadding)
                     )
@@ -54,9 +58,9 @@ fun SelfDrivenSingleUiComponentsScreen(
     modifier: Modifier = Modifier,
     viewModel: FeatureScreenViewModel = hiltViewModel()
 ) {
-    val components by remember { mutableStateOf(viewModel.getComponents()) }
+    val components by viewModel.state.collectAsStateWithLifecycle()
     ComponentList(
-        items = components,
+        widgets = components,
         componentDependencyMap = viewModel.componentDependencyMap,
         modifier = modifier
     )
@@ -64,44 +68,51 @@ fun SelfDrivenSingleUiComponentsScreen(
 
 @Composable
 fun ComponentList(
-    items: Widgets,
+    widgets: Widgets,
     componentDependencyMap: Map<String, ComponentDependencies>,
     modifier: Modifier = Modifier
 ) {
+    if (widgets.isLoading) {
+        // Show loading state
+        LoadingIndicator(modifier = modifier)
+        return
+    }
+    val lifecycle = LocalLifecycleOwner.current
     LazyColumn(
         modifier = modifier,
         contentPadding = PaddingValues(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         // Dynamically generate items for components
-        items(
-            items = items.items,
-            key = { it.id },
-            itemContent = { component ->
-                val componentDependency = remember(items) {
-                    componentDependencyMap[component.id]
-                }
-                Log.d("MicroFeature", "ComponentList:index ${component.id}")
-                componentDependency?.let {
-                    ComponentItem(component, componentDependency)
-                }
+        widgets.items.forEach { component ->
+            val componentDependency = componentDependencyMap[component.id]
+            Log.d("MicroFeature", "ComponentList:index ${component.id}")
+            componentDependency?.let {
+                componentDependency.componentComposer.renderItem(
+                    viewModel = componentDependency.componentVM,
+                    config = component,
+                    scope = this,
+                    lifecycle = lifecycle,
+                    modifier = Modifier.fillMaxWidth(),
+                    onAction = {}
+                )
             }
-        )
+        }
     }
 }
 
 @Composable
-fun ComponentItem(
-    component: ComponentConfig,
-    componentDependency: ComponentDependencies,
-) {
-    Log.d("MicroFeature", "ComponentItem: ${component.id} vm:${componentDependency.componentVM}")
-    componentDependency.componentComposer.ComposerContent(
-        viewModel = componentDependency.componentVM,
-        config = component,
-        modifier = Modifier.fillMaxWidth(),
-        onAction = {}
-    )
+fun LoadingIndicator(modifier: Modifier = Modifier) {
+    Box(
+        modifier = modifier
+            .fillMaxSize(), // Fills the entire screen
+        contentAlignment = Alignment.Center // Centers the content
+    ) {
+        CircularProgressIndicator(
+            modifier = Modifier.size(80.dp), // Size of the loader
+            color = MaterialTheme.colorScheme.tertiary // Loader color
+        )
+    }
 }
 
 @Preview(showBackground = true)
