@@ -88,14 +88,18 @@ fun ComponentList(
             val componentDependency = componentDependencyMap[component.id]
             Log.d("MicroFeature", "ComponentList:index ${component.id}")
             componentDependency?.let {
-                componentDependency.componentComposer.renderItem(
-                    viewModel = componentDependency.componentVM,
-                    config = component,
-                    scope = this,
-                    lifecycle = lifecycle,
-                    modifier = Modifier.fillMaxWidth(),
-                    onAction = {}
-                )
+
+                // FIXME: This is a temporary fix to avoid rendering the list component
+                if (component.itemType != ItemType.LIST) {
+                    componentDependency.componentComposer.renderItem(
+                        viewModel = componentDependency.componentVM,
+                        config = component,
+                        scope = this,
+                        lifecycle = lifecycle,
+                        modifier = Modifier.fillMaxWidth(),
+                        onAction = {}
+                    )
+                }
             }
         }
     }

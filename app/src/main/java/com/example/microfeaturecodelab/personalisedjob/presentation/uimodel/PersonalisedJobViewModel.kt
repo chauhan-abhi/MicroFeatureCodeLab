@@ -5,6 +5,7 @@ import com.example.microfeaturecodelab.base.MicroFeatureFactory
 import com.example.microfeaturecodelab.base.MicroFeatureViewModel
 import com.example.microfeaturecodelab.personalisedjob.domain.JobQueryParameter
 import com.example.microfeaturecodelab.personalisedjob.domain.GetJobsUseCase
+import com.example.microfeaturecodelab.personalisedjob.presentation.featureconfig.FetchStrategy
 import com.example.microfeaturecodelab.personalisedjob.presentation.model.RecommendedJobSection
 import com.example.microfeaturecodelab.personalisedjob.presentation.model.toUiModel
 import dagger.assisted.Assisted
@@ -25,7 +26,8 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalCoroutinesApi::class)
 class PersonalisedJobViewModel @AssistedInject constructor(
     private val useCase: GetJobsUseCase,
-    @Assisted val coroutineScope: CoroutineScope
+    @Assisted val coroutineScope: CoroutineScope,
+    @Assisted val sharingStarted: SharingStarted
 ): MicroFeatureViewModel {
     private val inputFlow = MutableStateFlow(JobQueryParameter.DEFAULT)
 
@@ -52,7 +54,7 @@ class PersonalisedJobViewModel @AssistedInject constructor(
         }
     }.stateIn(
         scope = coroutineScope,
-        started = SharingStarted.WhileSubscribed(5000L),
+        started = sharingStarted,
         initialValue = RecommendedJobSection("Loading", emptyList())
     )
 

@@ -4,11 +4,13 @@ import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -34,21 +36,31 @@ class RecentSearchesListComposer @Inject constructor() :
         modifier: Modifier,
         onAction: (Any) -> Unit,
     ) {
-        // Since we cannot use viewmodel.uiState.collectAsStateWithLifecycle() in
-        // non composable function LazyListScope.content()
+        // FIXME: We cannot use viewmodel.uiState.collectAsStateWithLifecycle() in
+        // non composable function LazyListScope.content() and
+        // items api require size or list reference
         lifecycle.lifecycleScope.launch {
             lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.uiState.collect { data ->
-                    items(
-                        items = data.items,
-                        key = { it.id },
-                        itemContent = { recentSearches ->
-                            RecentSearch(
-                                recentSearchItem = recentSearches,
-                                modifier = modifier
+                    if (data.items.isEmpty()) {
+                        item {
+                            CircularProgressIndicator(
+                                modifier = Modifier.size(20.dp), // Size of the loader
+                                color = MaterialTheme.colorScheme.tertiary // Loader color
                             )
                         }
-                    )
+                    } else {
+                        items(
+                            items = data.items,
+                            key = { it.id },
+                            itemContent = { recentSearches ->
+                                RecentSearch(
+                                    recentSearchItem = recentSearches,
+                                    modifier = modifier
+                                )
+                            }
+                        )
+                    }
                 }
             }
         }

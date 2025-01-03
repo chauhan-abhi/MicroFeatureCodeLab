@@ -15,7 +15,7 @@ class ComponentViewModelFactory @Inject constructor(
         viewModelScope: CoroutineScope
     ): ComponentDependencies {
         return viewModelFactories[componentConfig.type]?.let {
-            val componentVM = viewModelFactories[componentConfig.type]?.create(viewModelScope)
+            val componentVM = viewModelFactories[componentConfig.type]?.create(viewModelScope, componentConfig.fetchStrategy)
             val componentComposer = composerFactories[componentConfig.type]
             if (componentVM != null && componentComposer != null) {
                 ComponentDependencies(componentVM, componentComposer)

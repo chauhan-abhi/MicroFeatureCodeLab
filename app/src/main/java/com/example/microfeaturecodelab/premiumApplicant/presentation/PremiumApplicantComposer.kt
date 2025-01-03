@@ -29,7 +29,7 @@ class PremiumApplicantComposer @Inject constructor() :
         item {
             Log.d("PremiumApplicantComposer", "PremiumApplicantComposer: ${config.id}")
             LaunchedEffect(viewModel) {
-                Log.d("JobRecommendationSection", "$viewModel Launched Effect")
+                Log.d("JobRecommendationSection", "Launched Effect")
             }
             Card(
                 shape = RoundedCornerShape(8.dp),
